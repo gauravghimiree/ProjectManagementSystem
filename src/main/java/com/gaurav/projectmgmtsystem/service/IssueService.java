@@ -8,17 +8,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IssueService {
-    Optional<Issue> getIssueById(int Issued) throws Exception;
+  Issue getIssueById(Long IssueId) throws Exception;
 
     List<Issue> getIssueByProjectId(Long ProjectId) throws Exception;
 
-    Issue CreateIssue(IssueRequest issue , Long UserId) throws Exception;
+    Issue CreateIssue(IssueRequest issue , User user) throws Exception;
 
 
 
 
 
-    Optional <Issue> DeleteIssue(Long issueId,long UserId) throws Exception;
+    void  DeleteIssue(Long issueId,long UserId) throws Exception;
 
 
 
