@@ -1,6 +1,7 @@
 package com.gaurav.projectmgmtsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +19,13 @@ public class User {
       @Id
       @GeneratedValue(strategy = GenerationType.AUTO)
       private long id;
+      private String fullName;
+      private String email;       // Correct field name for Lombok to generate getEmail()
+
+      @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+      private String password;    // Correct field name for Lombok to generate getPassword()
+
+      private int projectSize;
 
       public long getId() {
             return id;
@@ -67,11 +75,7 @@ public class User {
             this.issues = issues;
       }
 
-      private String fullName;
-      private String email;       // Correct field name for Lombok to generate getEmail()
-      private String password;    // Correct field name for Lombok to generate getPassword()
 
-      private int projectSize;
 
       @JsonIgnore
       @OneToMany(mappedBy = "assignee", cascade = CascadeType.ALL)
