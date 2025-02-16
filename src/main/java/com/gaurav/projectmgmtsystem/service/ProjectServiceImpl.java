@@ -44,12 +44,16 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project savedProject = projectRepository.save(createdProject);
 
+// Now create the chat and associate it with the saved project
         Chat chat = new Chat();
+        chat.setProject(savedProject); // Set the project reference in Chat
+        Chat projectChat = chatService.createChat(chat); // Save the chat
 
-        Chat projectChat = chatService.createChat(chat);
-
+// Associate the chat with the project
         savedProject.setChat(projectChat);
-        return savedProject;
+
+// Finally, save the project again to update the chat reference
+        return projectRepository.save(savedProject);
     }
 
     @Override
@@ -136,7 +140,9 @@ public class ProjectServiceImpl implements ProjectService {
     public Chat getChatByProjectId(Long projectId) throws Exception {
 
 
-        return getProjectById(projectId).getChat();
+    Project project=getProjectById(projectId);
+    return project.getChat();
+
     }
 
     @Override

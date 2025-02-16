@@ -28,7 +28,7 @@ public class MessageController {
 
     @PostMapping("/send")
     public ResponseEntity <Message> sendMessage(@RequestBody CreateMessageRequest request)
-        throws Exception {
+            throws Exception {
         User user = userService.findUserById(request.getSenderId());
         if (user == null) {
             throw new Exception("User not found");
@@ -45,7 +45,7 @@ public class MessageController {
 
     @GetMapping("/chat/{projectId}")
     public ResponseEntity<List<Message>>getMessageByChatId(@PathVariable Long projectId)
-        throws Exception {
+            throws Exception {
         List<Message>messages=messageService.getMessagesByProjectId(projectId);
         return ResponseEntity.ok(messages);
     }

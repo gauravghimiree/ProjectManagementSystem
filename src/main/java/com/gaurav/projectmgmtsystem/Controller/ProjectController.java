@@ -93,15 +93,6 @@ public class ProjectController {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-    @GetMapping("/{projectId}/chat")
-    public ResponseEntity<Chat> getChatByProjectId(
-            @PathVariable Long projectId,
-            @RequestHeader("Authorization") String jwt
-    ) throws Exception {
-        User user = userService.findUserProfileByJwt(jwt);
-        Chat chat = projectService.getChatByProjectId(projectId);
-        return new ResponseEntity<>(chat, HttpStatus.OK);
-    }
 
     @PostMapping("/invite")
     public ResponseEntity<MessageResponse> inviteProject(
@@ -123,5 +114,15 @@ public class ProjectController {
         Invitation invitation = invitationService.acceptInvitation(token, user.getId());
         projectService.addUserToProject(invitation.getProjectId(), user.getId());
         return new ResponseEntity<>(invitation, HttpStatus.OK);
+    }
+
+    @GetMapping("/{projectId}/chat")
+    public ResponseEntity<Chat> getChatByProjectId(
+            @PathVariable Long projectId,
+            @RequestHeader("Authorization") String jwt
+    ) throws Exception {
+       User user = userService.findUserProfileByJwt(jwt);
+       Chat chat = projectService.getChatByProjectId(projectId);
+       return new ResponseEntity<>(chat, HttpStatus.OK);
     }
 }

@@ -26,6 +26,7 @@ public class Message {
     @ManyToOne
     private User sender;
 
+
     public long getId() {
         return id;
     }

@@ -19,6 +19,7 @@ public class Comments {
     private String content;
 
     private LocalDate createdDateTime;
+    private String creatorName;
 
 
     @ManyToOne
@@ -28,6 +29,13 @@ public class Comments {
     @ManyToOne
     private Issue issue;
 
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
+    }
 
     public long getId() {
         return id;

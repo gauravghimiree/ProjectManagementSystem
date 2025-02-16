@@ -30,29 +30,35 @@ public class CommentServiceImp implements  CommentService{
 
 
     public Comments CreateComment(Long issueId, Long userId, String content) throws Exception {
-        Optional<Issue> issueOptional= issueRepository.findById(issueId);
-        Optional<User> userOptional= userRepository.findById(userId);
-        if(issueOptional.isEmpty())
-        {
+        Optional<Issue> issueOptional = issueRepository.findById(issueId);
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if (issueOptional.isEmpty()) {
             throw new Exception("Issue not found");
         }
-        if (userOptional.isEmpty())
-        {
+
+        if (userOptional.isEmpty()) {
             throw new Exception("User not found");
         }
+
         Issue issue = issueOptional.get();
         User user = userOptional.get();
+
         Comments comments = new Comments();
         comments.setIssue(issue);
         comments.setUser(user);
         comments.setContent(content);
         comments.setCreatedDateTime(LocalDate.from(LocalDateTime.now()));
-        Comments SavedComment = commentRepository.save(comments);
+        comments.setCreatorName(user.getFullName());  // Set creator's name
 
-        issue.getComments().add(SavedComment);
-        return SavedComment;
+        // Save the comment and add it to the issue's list of comments
+        Comments savedComment = commentRepository.save(comments);
+        issue.getComments().add(savedComment);
+        System.out.println("Saved comment: " + savedComment.getCreatorName()); // Check the name
 
+        return savedComment;
     }
+
 
 
     @Override

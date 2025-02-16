@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IssueService {
-  Issue getIssueById(Long IssueId) throws Exception;
+  Issue getIssueById(long IssueId) throws Exception;
 
-    List<Issue> getIssueByProjectId(Long ProjectId) throws Exception;
+    List<Issue> getIssueByProjectId(long ProjectId) throws Exception;
 
     Issue CreateIssue(IssueRequest issue , User user) throws Exception;
 
@@ -18,15 +18,12 @@ public interface IssueService {
 
 
 
-    void  DeleteIssue(Long issueId,long UserId) throws Exception;
 
 
 
+  void  DeleteIssue(long issueId, long UserId) throws Exception;
 
-
-
-
-    Issue addUserToIssue(Long issueId, Long UserId) throws Exception;
+  Issue addUserToIssue(Long issueId, Long UserId) throws Exception;
 
     Issue UpdateStatus(Long issueId, String status) throws Exception;
 

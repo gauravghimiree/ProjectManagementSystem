@@ -2,17 +2,16 @@ package com.gaurav.projectmgmtsystem.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+
 public class Chat {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -40,7 +39,7 @@ public class Chat {
         return project;
     }
 
-    public  void setProject(Project project) {
+    public void setProject(Project project) {
         this.project = project;
     }
 

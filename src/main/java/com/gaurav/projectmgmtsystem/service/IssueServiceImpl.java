@@ -28,7 +28,7 @@ public class IssueServiceImpl implements  IssueService {
    private  UserService userService;
 
     @Override
-    public Issue getIssueById(Long issueId) throws Exception {
+    public Issue getIssueById(long issueId) throws Exception {
        Optional<Issue> issue = issueRepository.findById(issueId);
        if (issue.isPresent()) {
            return issue.get();
@@ -38,7 +38,7 @@ public class IssueServiceImpl implements  IssueService {
     }
 
     @Override
-    public List<Issue> getIssueByProjectId(Long ProjectId) throws Exception {
+    public List<Issue> getIssueByProjectId(long ProjectId) throws Exception {
         return issueRepository.findByProjectId(ProjectId);
     }
 
@@ -56,8 +56,10 @@ public class IssueServiceImpl implements  IssueService {
         return issueRepository.save(issue);
     }
 
+
+
     @Override
-    public void  DeleteIssue(Long issueId, long UserId) throws Exception {
+    public void  DeleteIssue(long issueId, long UserId) throws Exception {
         getIssueById(issueId);
       issueRepository.deleteById(issueId);
     }
