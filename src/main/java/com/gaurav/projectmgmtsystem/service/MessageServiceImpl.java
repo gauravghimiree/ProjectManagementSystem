@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Service
 public class MessageServiceImpl implements MessageService {
 
@@ -26,10 +25,10 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public Message sendMessage(Long senderId, Long projectId, String Content) throws Exception {
-        User sender =userRepository.findById(senderId).orElseThrow(
+        User sender = userRepository.findById(senderId).orElseThrow(
                 () -> new Exception("Sender not found")
         );
-        Chat chat =projectService.getProjectById(projectId).getChat();
+        Chat chat = projectService.getProjectById(projectId).getChat();
         Message message = new Message();
         message.setContent(Content);
         message.setSender(sender);
@@ -42,10 +41,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<Message> getMessagesByProjectId(Long ProjectId) throws  Exception {
+    public List<Message> getMessagesByProjectId(Long ProjectId) throws Exception {
         Chat chat = projectService.getProjectById(ProjectId).getChat();
-        List <Message> findByChatIdOrderByCreatedAtAsc=messageRepository.findByChatIdOrderByCreatedAtAsc (chat.getId());
-        return findByChatIdOrderByCreatedAtAsc;
-
+        return messageRepository.findByChatIdOrderByCreatedAtAsc(chat.getId());
     }
 }

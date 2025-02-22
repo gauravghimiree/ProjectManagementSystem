@@ -37,7 +37,6 @@ public class ProjectController {
     ) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
         List<Project> projects = projectService.getProjectByTeam(user, category, tag);
-
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
@@ -68,6 +67,8 @@ public class ProjectController {
             @RequestBody Project project
     ) throws Exception {
         User user = userService.findUserProfileByJwt(jwt);
+        // The request body can include updated values for name, description, tags, category,
+        // startDate, endDate, and status.
         Project updatedProject = projectService.updateProject(project, projectId);
         return new ResponseEntity<>(updatedProject, HttpStatus.OK);
     }
@@ -92,7 +93,6 @@ public class ProjectController {
         List<Project> projects = projectService.searchProjects(keyword, user);
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
-
 
     @PostMapping("/invite")
     public ResponseEntity<MessageResponse> inviteProject(
@@ -121,8 +121,8 @@ public class ProjectController {
             @PathVariable Long projectId,
             @RequestHeader("Authorization") String jwt
     ) throws Exception {
-       User user = userService.findUserProfileByJwt(jwt);
-       Chat chat = projectService.getChatByProjectId(projectId);
-       return new ResponseEntity<>(chat, HttpStatus.OK);
+        User user = userService.findUserProfileByJwt(jwt);
+        Chat chat = projectService.getChatByProjectId(projectId);
+        return new ResponseEntity<>(chat, HttpStatus.OK);
     }
 }
