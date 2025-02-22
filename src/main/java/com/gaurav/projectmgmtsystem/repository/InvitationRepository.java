@@ -9,5 +9,6 @@ public interface InvitationRepository  extends JpaRepository<Invitation, Long> {
     Invitation findByToken(String token);
 
     Invitation findByEmail(String useremail);
+    //error resolved
 
 }
