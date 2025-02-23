@@ -7,6 +7,7 @@ import com.gaurav.projectmgmtsystem.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,36 +33,40 @@ public class ProjectServiceImpl implements ProjectService {
         createdProject.setCategory(project.getCategory());
         createdProject.setDescription(project.getDescription());
 
-        // Set start date, end date, and status if provided; otherwise set defaults.
-        createdProject.setStartDate(project.getStartDate() != null ? project.getStartDate() : java.time.LocalDate.now());
-        createdProject.setEndDate(project.getEndDate()); // Could be null if not set.
+        // Set start date automatically to today's date if not provided
+        createdProject.setStartDate(project.getStartDate() != null ? project.getStartDate() : LocalDate.now());
+        createdProject.setEndDate(project.getEndDate()); // Optional, may be null
         createdProject.setStatus(project.getStatus() != null ? project.getStatus() : "pending");
 
+        // Ensure the owner is added to the project team
         createdProject.getTeam().add(user);
 
+        // Save the project
         Project savedProject = projectRepository.save(createdProject);
 
-        // Now create the chat and associate it with the saved project
+        // Create a chat and associate it with the saved project
         Chat chat = new Chat();
-        chat.setProject(savedProject); // Set the project reference in Chat
-        Chat projectChat = chatService.createChat(chat); // Save the chat
+        chat.setProject(savedProject);
+        Chat projectChat = chatService.createChat(chat);
 
-        // Associate the chat with the project
+        // Update the project with the chat reference
         savedProject.setChat(projectChat);
-
-        // Finally, save the project again to update the chat reference
         return projectRepository.save(savedProject);
     }
 
     @Override
     public List<Project> getProjectByTeam(User user, String category, String tags) throws Exception {
         List<Project> projects = projectRepository.findByTeamContainingOrOwner(user, user);
+
         if (category != null) {
-            projects = projects.stream().filter(project -> project.getCategory().equals(category))
+            projects = projects.stream()
+                    .filter(project -> category.equals(project.getCategory()))
                     .collect(Collectors.toList());
         }
+
         if (tags != null) {
-            projects = projects.stream().filter(project -> project.getTags().contains(tags))
+            projects = projects.stream()
+                    .filter(project -> project.getTags().contains(tags))
                     .collect(Collectors.toList());
         }
         return projects;
@@ -69,38 +74,48 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project getProjectById(Long projectId) throws Exception {
-        Optional<Project> optionalProject = projectRepository.findById(projectId);
-        if (optionalProject.isEmpty()) {
-            throw new Exception("Project not found");
-        }
-        return optionalProject.get();
+        return projectRepository.findById(projectId)
+                .orElseThrow(() -> new Exception("Project not found"));
     }
 
     @Override
     public void deleteProject(Long projectId, Long userId) throws Exception {
-        getProjectById(projectId);
+        getProjectById(projectId); // Ensures project exists
         projectRepository.deleteById(projectId);
     }
 
     @Override
     public Project updateProject(Project updatedProject, Long id) throws Exception {
         Project project = getProjectById(id);
-        project.setName(updatedProject.getName());
-        project.setDescription(updatedProject.getDescription());
-        project.setTags(updatedProject.getTags());
-        project.setCategory(updatedProject.getCategory());
 
-        // Update new fields:
+        if (updatedProject.getName() != null) {
+            project.setName(updatedProject.getName());
+        }
+
+        if (updatedProject.getDescription() != null) {
+            project.setDescription(updatedProject.getDescription());
+        }
+
+        if (updatedProject.getTags() != null) {
+            project.setTags(updatedProject.getTags());
+        }
+
+        if (updatedProject.getCategory() != null) {
+            project.setCategory(updatedProject.getCategory());
+        }
+
         if (updatedProject.getStartDate() != null) {
             project.setStartDate(updatedProject.getStartDate());
         }
+
         if (updatedProject.getEndDate() != null) {
             project.setEndDate(updatedProject.getEndDate());
         }
+
         if (updatedProject.getStatus() != null) {
-            // Optionally validate that the status is one of the allowed values ("pending", "progress", "done")
             project.setStatus(updatedProject.getStatus());
         }
+
         return projectRepository.save(project);
     }
 
@@ -108,10 +123,12 @@ public class ProjectServiceImpl implements ProjectService {
     public void addUserToProject(Long projectId, Long userId) throws Exception {
         Project project = getProjectById(projectId);
         User user = userService.findUserById(userId);
+
         if (!project.getTeam().contains(user)) {
             project.getChat().getUsers().add(user);
             project.getTeam().add(user);
         }
+
         projectRepository.save(project);
     }
 
@@ -119,10 +136,12 @@ public class ProjectServiceImpl implements ProjectService {
     public void removeUserFromProject(Long projectId, Long userId) throws Exception {
         Project project = getProjectById(projectId);
         User user = userService.findUserById(userId);
+
         if (project.getTeam().contains(user)) {
             project.getChat().getUsers().remove(user);
             project.getTeam().remove(user);
         }
+
         projectRepository.save(project);
     }
 

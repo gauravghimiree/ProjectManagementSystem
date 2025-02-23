@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public class Project {
     private List<String> tags = new ArrayList<>();
 
     // New fields for starting and ending dates and project status
+    @CreationTimestamp
     private LocalDate startDate;
     private LocalDate endDate;
     private String status; // allowed values: "pending", "progress", "done"
